@@ -9,6 +9,7 @@
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
+#include "mydatastore.h"
 
 using namespace std;
 struct ProdNameSorter {
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
      * Declare your derived DataStore object here replacing
      *  DataStore type to your derived type
      ****************/
-    DataStore ds;
+    MyDataStore ds;
 
 
 
@@ -53,12 +54,12 @@ int main(int argc, char* argv[])
 
     cout << "=====================================" << endl;
     cout << "Menu: " << endl;
-    cout << "  AND term term ...                  " << endl;
-    cout << "  OR term term ...                   " << endl;
+    cout << "  AND term term ...                  " << endl;//
+    cout << "  OR term term ...                   " << endl;//
     cout << "  ADD username search_hit_number     " << endl;
     cout << "  VIEWCART username                  " << endl;
     cout << "  BUYCART username                   " << endl;
-    cout << "  QUIT new_db_filename               " << endl;
+    cout << "  QUIT new_db_filename               " << endl;//
     cout << "====================================" << endl;
 
     vector<Product*> hits;
@@ -99,11 +100,60 @@ int main(int argc, char* argv[])
                 }
                 done = true;
             }
-	    /* Add support for other commands here */
-
-
-
-
+	        /* Add support for other commands here */
+            else if(cmd == "ADD"){
+                bool invalid=false;
+                string username;
+                ss>>username;
+                username = convToLower(username);
+                int search_hit_number=0;
+                ss>>search_hit_number;
+                if(search_hit_number>=1 && search_hit_number<=(int)hits.size()){
+                    for(unsigned int i=0; i<ds.users.size();i++){
+                        if(ds.users[i]->getName()==username){
+                            ds.users[i]->addToCart(hits[search_hit_number-1]);
+                            break;
+                        }
+                        else if(i==ds.users.size()-1){
+                            invalid=true;
+                        }
+                    }
+                }
+                else{
+                    invalid=true;
+                }
+                if(invalid==true){
+                    cout<<"Invalid request"<<endl;
+                }
+            }
+            else if(cmd == "VIEWCART"){
+                string username;
+                ss>>username;
+                username = convToLower(username);
+                for(unsigned int i =0; i<ds.users.size(); i++){
+                    if(ds.users[i]->getName()==username){
+                        ds.users[i]->printCart();
+                        break;
+                    }
+                    if(i==ds.users.size()-1){
+                        cout<<"Invalid username"<<endl;
+                    }
+                }
+            }
+            else if(cmd == "BUYCART"){
+                string username;
+                ss>>username;
+                username = convToLower(username);
+                for(unsigned int i =0; i<ds.users.size(); i++){
+                    if(ds.users[i]->getName()==username){
+                        ds.users[i]->buyCart();
+                        break;
+                    }
+                    if(i==ds.users.size()-1){
+                        cout<<"Invalid username"<<endl;
+                    }
+                }
+            }
             else {
                 cout << "Unknown command" << endl;
             }

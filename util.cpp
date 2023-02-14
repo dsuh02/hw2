@@ -11,19 +11,30 @@ std::string convToLower(std::string src)
     return src;
 }
 
-/** Complete the code to convert a string containing a rawWord
+/** Complete the code to convert a string containing a rawWords
     to a set of words based on the criteria given in the assignment **/
 std::set<std::string> parseStringToWords(string rawWords)
 {
-
-
-
-
-
-
-
-
-
+    rawWords=convToLower(rawWords);
+    std::set<std::string> words;
+    std::string nextWord;
+    for(unsigned int i=0; i<rawWords.size();i++){
+      char c = rawWords[i];
+      if(isdigit(c)||isalpha(c)){
+        nextWord+=c;
+      }
+      else{
+        if(nextWord.empty()==false && nextWord.length()>=2){
+          words.insert(nextWord);
+        }
+        nextWord="";
+      }
+        
+    }
+    if(nextWord.empty()==false && nextWord.length()>=2){
+      words.insert(nextWord);
+    }
+    return words;
 
 }
 

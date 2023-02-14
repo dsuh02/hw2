@@ -52,6 +52,14 @@ void Product::dump(std::ostream& os) const
 {
     os << category_ << "\n" << name_ << "\n" << price_ << "\n" << qty_ << endl;
 }
-
+set<string> Product::keywords() const{
+    set<string> fin;
+    fin.insert("CALLED BASE HERE");
+    return fin;
+}
+string Product::displayString() const{
+    string fin="CALLED BASE HERE";
+    return fin;
+}
 
 
